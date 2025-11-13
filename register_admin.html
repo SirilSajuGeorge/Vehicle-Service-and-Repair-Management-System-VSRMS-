@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Registration - VSRMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
+    
+    .auth-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--shadow-xl);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        max-width: 450px;
+        width: 100%;
+    }
+    
+    .auth-header-admin {
+        background: linear-gradient(135deg, var(--danger-color), #b91c1c);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .auth-body {
+        padding: 2rem;
+    }
+    
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+    
+    .form-floating > .form-control {
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        padding: 1rem 0.75rem;
+        height: calc(3.5rem + 2px);
+    }
+    
+    .form-floating > .form-control:focus {
+        border-color: var(--danger-color);
+        box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25);
+    }
+    
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+        color: var(--secondary-color);
+    }
+    
+    .auth-links {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .security-note {
+        background: #fef3c7;
+        border: 1px solid #fbbf24;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card">
+                    <div class="auth-header-admin">
+                        <h1 class="h3 mb-3">
+                            <i class="fas fa-user-shield me-2"></i>
+                            Admin Registration
+                        </h1>
+                        <p class="mb-0 opacity-75">Create administrative access</p>
+                    </div>
+                    
+                    <div class="auth-body">
+                        <div class="security-note">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-shield-alt text-warning me-2"></i>
+                                <small class="text-warning fw-bold">Admin Access Required</small>
+                            </div>
+                            <small class="text-muted">
+                                Admin accounts have full system access and management capabilities.
+                            </small>
+                        </div>
+                        
+                        <form method="POST" action="">
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="form-floating">
+                                {{ form.name(class="form-control form-control-modern", placeholder="Full Name", required=True, id="name") }}
+                                <label for="name">
+                                    <i class="fas fa-user me-2"></i>Administrator Name
+                                </label>
+                            </div>
+                            
+                            <div class="form-floating">
+                                {{ form.email(class="form-control form-control-modern", placeholder="Admin Email", required=True, id="email") }}
+                                <label for="email">
+                                    <i class="fas fa-envelope me-2"></i>Admin Email
+                                </label>
+                            </div>
+                            
+                            <div class="form-floating">
+                                {{ form.password(class="form-control form-control-modern", placeholder="Secure Password", required=True, id="password") }}
+                                <label for="password">
+                                    <i class="fas fa-lock me-2"></i>Secure Password
+                                </label>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mb-3">
+                                <button type="submit" class="btn btn-modern btn-danger-modern btn-lg">
+                                    <i class="fas fa-user-shield me-2"></i>
+                                    Create Admin Account
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="auth-links">
+                            <p class="mb-2">
+                                <small class="text-muted">Already have admin access?</small>
+                            </p>
+                            <a href="{{ url_for('login_admin') }}" class="btn btn-outline-danger btn-modern">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                Admin Sign In
+                            </a>
+                            <div class="mt-3">
+                                <a href="{{ url_for('select_user') }}" class="text-muted text-decoration-none">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Back to Home
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

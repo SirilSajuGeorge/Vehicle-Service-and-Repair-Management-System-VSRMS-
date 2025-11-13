@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Add Vehicle - VSRMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .vehicle-form {
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+    }
+    
+    .form-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .form-body {
+        padding: 2rem;
+    }
+    
+    .form-floating {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-floating > .form-control-modern {
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        padding: 1rem 0.75rem;
+        height: calc(3.5rem + 2px);
+        transition: all 0.2s ease;
+    }
+    
+    .form-floating > .form-control-modern:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+    }
+    
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+        color: var(--secondary-color);
+        font-weight: 500;
+    }
+    
+    .helper-text {
+        font-size: 0.875rem;
+        color: var(--secondary-color);
+        margin-top: 0.5rem;
+    }
+    
+    .vehicle-preview {
+        background: var(--light-gray);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .preview-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+    
+    .preview-label {
+        font-weight: 500;
+        color: var(--secondary-color);
+    }
+    
+    .preview-value {
+        color: var(--dark-gray);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="form-container">
+        <!-- Page Header -->
+        <div class="text-center mb-4">
+            <h1 class="page-title">
+                <i class="fas fa-car-side me-3"></i>
+                Add New Vehicle
+            </h1>
+            <p class="page-subtitle">Register your vehicle to start tracking maintenance</p>
+        </div>
+        
+        <!-- Vehicle Form -->
+        <div class="vehicle-form">
+            <div class="form-header">
+                <h2 class="h4 mb-2">
+                    <i class="fas fa-plus me-2"></i>
+                    Vehicle Registration
+                </h2>
+                <p class="mb-0 opacity-75">Enter your vehicle details below</p>
+            </div>
+            
+            <div class="form-body">
+                <form method="POST" action="{{ url_for('add_vehicle') }}" id="vehicleForm">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.model(class="form-control form-control-modern", placeholder="Vehicle Model", id="model") }}
+                                <label for="model">
+                                    <i class="fas fa-car me-2"></i>Vehicle Model
+                                </label>
+                                {% if form.model.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.model.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="helper-text">e.g., Toyota Camry, Honda Civic</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.year(class="form-control form-control-modern", placeholder="Year", type="number", min="1900", max="2025", id="year") }}
+                                <label for="year">
+                                    <i class="fas fa-calendar me-2"></i>Year
+                                </label>
+                                {% if form.year.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.year.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.license_plate(class="form-control form-control-modern", placeholder="License Plate", id="license_plate", style="text-transform: uppercase;") }}
+                                <label for="license_plate">
+                                    <i class="fas fa-id-card me-2"></i>License Plate
+                                </label>
+                                {% if form.license_plate.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.license_plate.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.vin(class="form-control form-control-modern", placeholder="VIN", id="vin", maxlength="17") }}
+                                <label for="vin">
+                                    <i class="fas fa-fingerprint me-2"></i>VIN Number
+                                </label>
+                                {% if form.vin.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.vin.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="helper-text">17-character Vehicle Identification Number</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating">
+                        {{ form.odo_reading(class="form-control form-control-modern", placeholder="Current Odometer Reading", type="number", min="0", id="odo_reading") }}
+                        <label for="odo_reading">
+                            <i class="fas fa-tachometer-alt me-2"></i>Current Odometer Reading (km)
+                        </label>
+                        {% if form.odo_reading.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.odo_reading.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="helper-text">Enter the current mileage/kilometers</div>
+                    </div>
+                    
+                    <!-- Vehicle Preview -->
+                    <div class="vehicle-preview" id="vehiclePreview" style="display: none;">
+                        <h5 class="h6 mb-3">
+                            <i class="fas fa-eye me-2"></i>
+                            Vehicle Preview
+                        </h5>
+                        <div class="preview-item">
+                            <span class="preview-label">Model:</span>
+                            <span class="preview-value" id="previewModel">-</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Year:</span>
+                            <span class="preview-value" id="previewYear">-</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">License Plate:</span>
+                            <span class="preview-value" id="previewLicense">-</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">VIN:</span>
+                            <span class="preview-value" id="previewVin">-</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Odometer:</span>
+                            <span class="preview-value" id="previewOdo">- km</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-modern btn-primary-modern btn-lg">
+                            <i class="fas fa-plus me-2"></i>
+                            Add Vehicle
+                        </button>
+                        <a href="{{ url_for('view_vehicles') }}" class="btn btn-outline-secondary btn-modern">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Back to Vehicles
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('vehicleForm');
+    const preview = document.getElementById('vehiclePreview');
+    const inputs = ['model', 'year', 'license_plate', 'vin', 'odo_reading'];
+    
+    // Update preview when inputs change
+    inputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.addEventListener('input', updatePreview);
+        }
+    });
+    
+    function updatePreview() {
+        const model = document.getElementById('model').value;
+        const year = document.getElementById('year').value;
+        const license = document.getElementById('license_plate').value;
+        const vin = document.getElementById('vin').value;
+        const odo = document.getElementById('odo_reading').value;
+        
+        // Show preview if any field has content
+        if (model || year || license || vin || odo) {
+            preview.style.display = 'block';
+            
+            document.getElementById('previewModel').textContent = model || '-';
+            document.getElementById('previewYear').textContent = year || '-';
+            document.getElementById('previewLicense').textContent = license || '-';
+            document.getElementById('previewVin').textContent = vin || '-';
+            document.getElementById('previewOdo').textContent = odo ? odo + ' km' : '- km';
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+    
+    // Auto-format license plate to uppercase
+    const licenseInput = document.getElementById('license_plate');
+    if (licenseInput) {
+        licenseInput.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Book Service for {{ vehicle.model }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('book_service', vehicle_id=vehicle.id) }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Vehicle Information -->
+                        <div class="mb-4">
+                            <h5>Vehicle Details</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Model:</strong> {{ vehicle.model }}</p>
+                                    <p><strong>Year:</strong> {{ vehicle.year }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>License Plate:</strong> {{ vehicle.license_plate }}</p>
+                                    <p><strong>Current Odometer:</strong> {{ vehicle.odo_reading }} km</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Service Type -->
+                        <div class="mb-3">
+                            <label for="service_type" class="form-label">Service Type</label>
+                            {{ form.service_type(class="form-select") }}
+                            {% if form.service_type.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.service_type.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Scheduled Date -->
+                        <div class="mb-3">
+                            <label for="scheduled_date" class="form-label">Scheduled Date</label>
+                            {{ form.scheduled_date(class="form-control", type="date") }}
+                            {% if form.scheduled_date.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.scheduled_date.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Odometer Reading -->
+                        <div class="mb-3">
+                            <label for="odo_reading" class="form-label">Current Odometer Reading (km)</label>
+                            {{ form.odo_reading(class="form-control", type="number", min="0", step="1") }}
+                            {% if form.odo_reading.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.odo_reading.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            {{ form.notes(class="form-control", rows="3", placeholder="Any specific requirements or issues to address...") }}
+                            {% if form.notes.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.notes.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calendar-check"></i> Book Service
+                            </button>
+                            <a href="{{ url_for('view_vehicles') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Vehicles
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

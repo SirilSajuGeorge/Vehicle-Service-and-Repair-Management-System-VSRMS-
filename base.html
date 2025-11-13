@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VSRMS - Vehicle Service & Repair Management{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/modern-styles.css') }}" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #64748b;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --light-gray: #f8fafc;
+            --dark-gray: #1e293b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--light-gray);
+            color: #334155;
+            line-height: 1.6;
+        }
+        
+        .modern-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .modern-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+        
+        .btn-modern {
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-modern:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary-modern {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+        }
+        
+        .btn-primary-modern:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #1e40af);
+            color: white;
+        }
+        
+        .btn-success-modern {
+            background: linear-gradient(135deg, var(--success-color), #047857);
+            color: white;
+        }
+        
+        .btn-warning-modern {
+            background: linear-gradient(135deg, var(--warning-color), #b45309);
+            color: white;
+        }
+        
+        .btn-danger-modern {
+            background: linear-gradient(135deg, var(--danger-color), #b91c1c);
+            color: white;
+        }
+        
+        .form-control-modern {
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            transition: all 0.2s ease;
+            background-color: white;
+        }
+        
+        .form-control-modern:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+            outline: none;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .status-scheduled { background-color: #dbeafe; color: #1d4ed8; }
+        .status-in-progress { background-color: #fef3c7; color: #d97706; }
+        .status-completed { background-color: #d1fae5; color: #059669; }
+        .status-cancelled { background-color: #fee2e2; color: #dc2626; }
+        
+        .sidebar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .sidebar-item {
+            padding: 0.75rem 1rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            margin: 0.25rem;
+        }
+        
+        .sidebar-item:hover, .sidebar-item.active {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .modern-navbar {
+            background: white !important;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .modern-navbar .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+        }
+        
+        .modern-navbar .nav-link {
+            color: var(--secondary-color) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 6px;
+            margin: 0 0.25rem;
+            transition: all 0.2s ease;
+        }
+        
+        .modern-navbar .nav-link:hover {
+            background-color: #f1f5f9;
+            color: var(--primary-color) !important;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .table-modern {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .table-modern th {
+            background-color: #f8fafc;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+        
+        .table-modern td {
+            border: none;
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .alert-modern {
+            border-radius: 8px;
+            border: none;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .page-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-subtitle {
+            color: var(--secondary-color);
+            font-size: 1rem;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-modern sticky-top" style="background: white; border-bottom: 1px solid var(--border-color);">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('select_user') }}">
+                <i class="fas fa-car-side me-2"></i>
+                <span>VSRMS</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user|is_admin %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('dashboard_admin') }}">
+                                    <i class="fas fa-chart-line me-2"></i>Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('view_services') }}">
+                                    <i class="fas fa-wrench me-2"></i>Services
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('view_vehicles') }}">
+                                    <i class="fas fa-car me-2"></i>Vehicles
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin_payments') }}">
+                                    <i class="fas fa-credit-card me-2"></i>Payments
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('customer_dashboard') }}">
+                                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('view_vehicles') }}">
+                                    <i class="fas fa-car me-2"></i>My Vehicles
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('view_services') }}">
+                                    <i class="fas fa-clipboard-list me-2"></i>My Services
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('service_history') }}">
+                                    <i class="fas fa-history me-2"></i>History
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-2"></i>
+                                {{ current_user.name }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% if not current_user|is_admin %}
+                                    <li><a class="dropdown-item" href="{{ url_for('update_user_details') }}">
+                                        <i class="fas fa-edit me-2"></i>Profile
+                                    </a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('logout') }}">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login_customer') }}">
+                                <i class="fas fa-user me-2"></i>Customer Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login_admin') }}">
+                                <i class="fas fa-user-shield me-2"></i>Admin Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
+                {% for category, message in messages %}
+                    {% set alert_class = 'primary' %}
+                    {% if category == 'success' %}{% set alert_class = 'success' %}{% endif %}
+                    {% if category == 'danger' %}{% set alert_class = 'danger' %}{% endif %}
+                    {% if category == 'warning' %}{% set alert_class = 'warning' %}{% endif %}
+                    {% if category == 'info' %}{% set alert_class = 'info' %}{% endif %}
+                    
+                    <div class="alert alert-{{ alert_class }} alert-modern alert-dismissible fade show" role="alert">
+                        <div class="d-flex align-items-center">
+                            {% if category == 'success' %}
+                                <i class="fas fa-check-circle me-2"></i>
+                            {% elif category == 'danger' %}
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                            {% elif category == 'warning' %}
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle me-2"></i>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="py-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-4" style="background: white; border-top: 1px solid var(--border-color);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0 text-muted">&copy; 2024 VSRMS. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <small class="text-muted">Vehicle Service & Repair Management System</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Add smooth scrolling and modern interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-hide alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
+            
+            // Add loading states to form submissions
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn && submitBtn.classList.contains('btn-modern')) {
+                        // Store original text
+                        const originalText = submitBtn.innerHTML;
+                        
+                        // Show loading state
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                        submitBtn.disabled = true;
+                        
+                        // Re-enable after 5 seconds in case of error
+                        setTimeout(() => {
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                        }, 5000);
+                    }
+                });
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 
