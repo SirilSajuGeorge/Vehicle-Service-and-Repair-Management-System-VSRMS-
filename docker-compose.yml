@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  vsrms-web:
+    build: .
+    container_name: vsrms-web
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=app.py
+      - SECRET_KEY=your-secret-key-change-this-in-production
+    volumes:
+      - ./instance:/app/instance
+      - ./static/uploads:/app/static/uploads
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/', timeout=10)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - vsrms-network
+
+  # Optional: Add MySQL database service (uncomment if you want to use MySQL instead of SQLite)
+  # vsrms-db:
+  #   image: mysql:8.0
+  #   container_name: vsrms-db
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=root_password
+  #     - MYSQL_DATABASE=vehicle_management
+  #     - MYSQL_USER=vsrms_user
+  #     - MYSQL_PASSWORD=vsrms_password
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   ports:
+  #     - "3306:3306"
+  #   networks:
+  #     - vsrms-network
+  #   restart: unless-stopped
+
+networks:
+  vsrms-network:
+    driver: bridge
+
+# volumes:
+#   mysql_data:
